@@ -75,7 +75,8 @@ async def get_file_list(slack_api_token):
                 if resp.status != 200:
                     _LOGGER.error("Bad response from slack api: %s", resp.status)
                 files = await resp.json()
-                _LOGGER.debug(files)
+                if "error" in files:
+                    _LOGGER.error(files)
                 pages = files["paging"]["pages"]
                 all_files = all_files + files["files"]
                 total_files = total_files + len(files["files"])
