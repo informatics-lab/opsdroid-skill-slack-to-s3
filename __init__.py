@@ -115,6 +115,8 @@ async def check_slack_file_quota(opsdroid, config, message):
                           None,
                           config.get("room", connector.default_room),
                           opsdroid.default_connector)
+    else:
+        await message.respond("I'm on it!")
 
     files_removed = 0
     data_saved = 0
