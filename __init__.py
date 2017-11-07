@@ -72,6 +72,8 @@ async def get_file_list(slack_api_token):
     async with aiohttp.ClientSession() as session:
         while pages is None or page <= pages:
             async with session.get('https://slack.com/api/files.list?token={}&page={}'.format(slack_api_token, page)) as resp:
+                if resp.status != 200:
+                    _LOGGER.error("Bad response from slack api: %s", resp.status)
                 files = await resp.json()
                 pages = files["paging"]["pages"]
                 all_files = all_files + files["files"]
