@@ -76,7 +76,11 @@ async def get_file_list(slack_api_token):
                     _LOGGER.error("Bad response from slack api: %s", resp.status)
                 files = await resp.json()
                 if "error" in files:
-                    _LOGGER.error(files)
+                    if files["error"] == 'user_is_bot':
+                        _LOGGER.error("The Slack token you've used is for a bot user and cannot list files in a team."
+                                      "See the Slack documentation for info on which scope you require https://api.slack.com/methods/files.list")
+                    else:
+                        _LOGGER.error("Unknown error %s", files)
                 pages = files["paging"]["pages"]
                 all_files = all_files + files["files"]
                 total_files = total_files + len(files["files"])
